@@ -14,13 +14,30 @@ Criar uma base sólida para um sistema de login, com:
 
 ---
 
+🚀 Funcionalidades
+✅ Cadastro de utilizadores
+✅ Login com validação de credenciais
+✅ Hash de senha com SHA256
+✅ Identificação de utilizadores:
+👤 Usuário comum
+🔐 Administrador
+✅ Conexão com base de dados SQL Server
+✅ Estrutura com separação de responsabilidades:
+Modelo
+Serviço
+Repositório
+Utilitários
+
+---
+
 ## 🛠️ Tecnologias Utilizadas
 
 - C#
 - .NET
 - SQL Server
 - ADO.NET 
-
+- SHA256 (criptografia)
+- Console Application
 ---
 
 ## 🗄️ Estrutura da Base de Dados
