@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Tela_Login.Modelo;
+using Tela_Login.Servico;
 
 namespace Tela_Login.Utilitarios
 {
     public class Criptografia
     {
+        
+        private string _ConnectionString;   
+        
         public static string GerarHash(string senha)
         {
             using (SHA256 sha256 = SHA256.Create())
@@ -35,5 +41,7 @@ namespace Tela_Login.Utilitarios
         // ⚠ Para aplicações mais seguras, recomenda-se usar algoritmos como
         // bcrypt, PBKDF2 ou Argon2, que incluem salt e dificultam ataques
         // de força bruta e tabelas de hash.
+
+        
     }
 }

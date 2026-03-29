@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,14 +29,14 @@ namespace Tela_Login.Servico
             _repositorioU.AddUser(user);
         }
 
-        public void ReadUsers(int Id)
+        public Users ReadUsers(int Id)
         {
             if (Id <= 0)
             {
                 throw new ArgumentException("Id deve ser maior que zero.");
             }
 
-            _repositorioU.ReadUsers(Id);
+            return _repositorioU.ReadUsers(Id);
         }
 
         public void UpdateUser(Users user)
@@ -44,11 +45,15 @@ namespace Tela_Login.Servico
             {
                 throw new ArgumentException("Id deve ser maior que zero.");
             }
-            if (string.IsNullOrEmpty(user.Nome) || string.IsNullOrEmpty(user.Senha))
+            if (string.IsNullOrEmpty(user.Nome) || string.IsNullOrEmpty(user.SenhaHash))
             {
                 throw new ArgumentException("Nome e Senha são obrigatórios.");
             }
-            
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
             _repositorioU.UpdateUser(user);
         }
 
@@ -59,6 +64,21 @@ namespace Tela_Login.Servico
                 throw new ArgumentException("Id deve ser maior que zero.");
             }
             _repositorioU.DeleteUser(Id);
+        }
+
+        public Users Login(string nome, string senhaHash)
+        {
+            return _repositorioU.Login(nome, senhaHash);
+        }
+
+        public Users ReadUsersByName(string nome)
+        {
+            if (string.IsNullOrWhiteSpace(nome))
+            {
+                throw new ArgumentException("Nome inválido.");
+            }
+
+            return _repositorioU.ReadUsersByName(nome);
         }
     }
 }

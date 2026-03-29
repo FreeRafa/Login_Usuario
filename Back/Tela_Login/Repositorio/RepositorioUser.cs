@@ -9,7 +9,7 @@ using Tela_Login.Modelo;
 
 namespace Tela_Login.Repositorio
 {
-    internal class RepositorioUser
+    public class RepositorioUser
     {
         private readonly string _ConnectionString;
 
@@ -101,6 +101,77 @@ namespace Tela_Login.Repositorio
                     cmd.ExecuteNonQuery();
                 }
             }
+        }
+
+        public Users Login(string nome, string senhaHash)
+        {
+            Users user = null;
+
+            using (SqlConnection conn = new SqlConnection(_ConnectionString))
+            {
+                conn.Open();
+
+                string query = @"SELECT Id, Nome, SenhaHash, IsAdmin 
+                         FROM Users 
+                         WHERE Nome = @Nome AND SenhaHash = @SenhaHash";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.Add("@Nome", SqlDbType.NVarChar, 100).Value = nome;
+                    cmd.Parameters.Add("@SenhaHash", SqlDbType.NVarChar, 100).Value = senhaHash;
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            user = new Users
+                            {
+                                Id = Convert.ToInt32(reader["Id"]),
+                                Nome = reader["Nome"].ToString(),
+                                SenhaHash = reader["SenhaHash"].ToString(),
+                                IsAdmin = Convert.ToBoolean(reader["IsAdmin"])
+                            };
+                        }
+                    }
+                }
+            }
+
+            return user;
+        }
+
+        public Users ReadUsersByName(string nome)
+        {
+            Users user = null;
+
+            using (SqlConnection conn = new SqlConnection(_ConnectionString))
+            {
+                conn.Open();
+
+                string query = @"SELECT Id, Nome, SenhaHash, IsAdmin 
+                         FROM Users 
+                         WHERE Nome = @Nome";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.Add("@Nome", SqlDbType.NVarChar, 100).Value = nome;
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            user = new Users
+                            {
+                                Id = Convert.ToInt32(reader["Id"]),
+                                Nome = reader["Nome"].ToString(),
+                                SenhaHash = reader["SenhaHash"].ToString(),
+                                IsAdmin = Convert.ToBoolean(reader["IsAdmin"])
+                            };
+                        }
+                    }
+                }
+            }
+
+            return user;
         }
     }
 }

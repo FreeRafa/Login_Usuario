@@ -35,6 +35,24 @@ namespace Tela_Login
 
             ServicoUser servico = new ServicoUser(connectionString);
 
+            // Verifica se existe o admin
+            var admin = servico.ReadUsersByName("admin".Trim().ToLower());
+
+            if (admin == null)
+            {
+                Users novoAdmin = new Users
+                {
+                    Nome = "admin",
+                    SenhaHash = Criptografia.GerarHash("admin123"),
+                    IsAdmin = true
+                };
+
+                servico.AddUser(novoAdmin);
+
+                Console.WriteLine("Admin criado automaticamente.");
+            }
+
+
             int opcao = -1;
 
             while (opcao != 0)
@@ -46,13 +64,51 @@ namespace Tela_Login
 
                 Console.Write("Escolha uma opção: ");
 
-                opcao = int.Parse(Console.ReadLine());
-
-                ServicoUser servicou = new ServicoUser(connectionString);
+                if (!int.TryParse(Console.ReadLine(), out opcao))
+                {
+                    Console.WriteLine("Opção inválida!");
+                    continue;
+                }
 
                 switch (opcao)
                 {
                     case 1:
+
+                        Console.WriteLine("Digite seu Nome:");
+                        string nomeLogin = Console.ReadLine();
+
+                        if (string.IsNullOrWhiteSpace(nomeLogin))
+                        {
+                            Console.WriteLine("Nome inválido");
+                            break;
+                        }
+
+                        Console.WriteLine("Digite sua Senha:");
+                        string senhaLogin = Console.ReadLine();
+
+                        if (string.IsNullOrWhiteSpace(senhaLogin))
+                        {
+                            Console.WriteLine("Senha inválida");
+                            break;
+                        }
+
+                        string senhaHash = Criptografia.GerarHash(senhaLogin);
+
+                        Users usuarioLogado = servico.Login(nomeLogin, senhaHash);
+
+                        if (usuarioLogado != null)
+                        {
+                            Console.WriteLine("Login realizado com sucesso!");
+
+                            if (usuarioLogado.IsAdmin)
+                                Console.WriteLine("Bem-vindo, Administrador!");
+                            else
+                                Console.WriteLine("Bem-vindo, Usuário!");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Login inválido!");
+                        }
 
                         break;
 
@@ -60,34 +116,28 @@ namespace Tela_Login
 
                         Users user = new Users();
 
-                        Console.WriteLine("Cadastro User:");
-
                         Console.WriteLine("Digite seu Nome:");
                         user.Nome = Console.ReadLine();
 
                         if (string.IsNullOrWhiteSpace(user.Nome))
                         {
                             Console.WriteLine("Nome inválido");
-                            return;
+                            break;
                         }
 
                         Console.WriteLine("Digite sua Senha:");
                         string senha = Console.ReadLine();
 
                         user.SenhaHash = Criptografia.GerarHash(senha);
-
                         user.IsAdmin = false;
-                        
-                        servicou.AddUser(user);
+
+                        servico.AddUser(user);
 
                         break;
 
                     case 3:
-
-                        break;
-
-                    case 0:
-
+                        Console.WriteLine("Saindo...");
+                        Environment.Exit(0);
                         break;
 
                     default:
@@ -95,6 +145,7 @@ namespace Tela_Login
                         break;
                 }
             }
+
         }
     }
 }
