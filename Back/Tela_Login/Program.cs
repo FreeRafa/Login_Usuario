@@ -14,7 +14,7 @@ namespace Tela_Login
     {
         static void Main(string[] args)
         {
-            string connectionString = "Server=DESKTOP-42RL6N1;Database=Tela_Cadastro;User Id=sa;Password=135113rr;";
+            string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=Tela_Cadastro;Integrated Security=True;";
 
             try
             {

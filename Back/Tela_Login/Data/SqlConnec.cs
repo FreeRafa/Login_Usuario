@@ -10,10 +10,11 @@ namespace Tela_Login.Data
     internal class SqlConnec
     {
         private static readonly string connectionString =
-           "Server=DESKTOP-42RL6N1;Database=Tela_Cadastro;User Id=sa;Password=135113rr;"; 
+           "Server=(localdb)\\MSSQLLocalDB;Database=Tela_Cadastro;Integrated Security=True;";
 
-        
-        public static SqlConnection GetConnection() 
+
+
+       public static SqlConnection GetConnection() 
         {
             SqlConnection connection = new SqlConnection(connectionString);
             connection.Open(); 
